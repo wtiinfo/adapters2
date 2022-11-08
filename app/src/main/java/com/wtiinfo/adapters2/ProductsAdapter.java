@@ -41,15 +41,35 @@ public class ProductsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = layoutInflater.inflate(R.layout.adapter_produtos, parent, false);
+
+        View view = convertView;
+        ProductViewHolder vh;
+
+        //se null, estara sendo criada, inflada a view,
+        // caso contraio sera reaproveitada, por ja possuir um viewHolder
+        if (view == null) {
+
+            view = layoutInflater.inflate(R.layout.adapter_produtos, parent, false);
+
+            vh = new ProductViewHolder();
+            vh.txtName = view.findViewById(R.id.txtname);
+            vh.txtPrice = view.findViewById(R.id.txtprice);
+            view.setTag(vh); //atrelhando o viewholder a view
+
+        } else {
+            vh = (ProductViewHolder) view.getTag();
+        }
+
         Product product = products.get(position);
 
-        TextView txtName = view.findViewById(R.id.txtname);
-        TextView txtPrice = view.findViewById(R.id.txtprice);
-
-        txtName.setText(product.getName());
-        txtPrice.setText(nf.format(product.getPrice()));
+        vh.txtName.setText(product.getName());
+        vh.txtPrice.setText(nf.format(product.getPrice()));
 
         return view;
+    }
+
+    private static class ProductViewHolder {
+        public TextView txtName;
+        public TextView txtPrice;
     }
 }
